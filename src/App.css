@@ -71,6 +71,17 @@
   background: var(--accent-border);
 }
 
+/* dish availability hint */
+.dish-hint {
+  margin: -12px 0 20px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 14px;
+}
+
 /* name input */
 .name-input {
   width: 100%;
@@ -101,10 +112,21 @@
 }
 
 /* date picker */
+.date-field {
+  display: block;
+  margin-top: clamp(14px, 3vw, 18px);
+  text-align: left;
+}
+.field-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+}
 .date-input {
   width: 100%;
   box-sizing: border-box;
-  margin-top: clamp(14px, 3vw, 18px);
   padding: 14px 18px;
   font: inherit;
   color: var(--text-h);

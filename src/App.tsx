@@ -47,8 +47,8 @@ type Option = {
 const places: Option[] = [
   { id: 'restaurant', label: 'Ресторан', emoji: '🍽️', desc: 'Уютный зал и свечи' },
   { id: 'park', label: 'Парк', emoji: '🌳', desc: 'Прогулка на свежем воздухе' },
-  { id: 'rooftop', label: 'Крыша', emoji: '🌆', desc: 'Вид на ночной город' },
-  { id: 'beach', label: 'Пляж', emoji: '🏖️', desc: 'Закат у воды' },
+  { id: 'cafe', label: 'Кофейня', emoji: '☕', desc: 'Уютно за чашкой кофе' },
+  { id: 'cinema', label: 'Кино', emoji: '🎬', desc: 'Тёмный зал и попкорн' },
 ]
 
 const dishes: Option[] = [
@@ -57,6 +57,26 @@ const dishes: Option[] = [
   { id: 'steak', label: 'Стейк', emoji: '🥩', desc: 'Сытно и красиво' },
   { id: 'dessert', label: 'Десерт', emoji: '🍰', desc: 'Для сладкого вечера' },
 ]
+
+// какие блюда уместны в каждом месте (id блюд)
+const allDishIds = dishes.map((d) => d.id)
+const dishesByPlace: Record<string, string[]> = {
+  restaurant: allDishIds, // в ресторане можно всё
+  cafe: ['pasta', 'sushi', 'dessert'], // в кофейне стейк не подадут
+  park: ['sushi', 'dessert'], // в парке — только то, что удобно есть на ходу
+  cinema: ['dessert'], // в тёмном зале — только лёгкий перекус
+}
+
+function allowedDishIds(placeId?: string): string[] {
+  return (placeId && dishesByPlace[placeId]) || allDishIds
+}
+
+// подсказка, почему часть блюд скрыта
+const dishHintByPlace: Record<string, string> = {
+  cafe: 'В кофейне стейк не подают 🥩',
+  park: 'В парке — только то, что удобно есть на ходу 🌳',
+  cinema: 'В тёмном зале — лёгкий перекус 🍿',
+}
 
 const times: Option[] = [
   { id: '12:00', label: '12:00', emoji: '☀️', desc: 'Обеденное свидание' },
@@ -99,8 +119,25 @@ function App() {
   const isLast = step === steps.length - 1
   const selected = choices[current.key]
 
+  // на шаге блюда показываем только то, что уместно в выбранном месте
+  const currentOptions =
+    current.key === 'dish'
+      ? dishes.filter((d) => allowedDishIds(choices.place?.id).includes(d.id))
+      : current.options
+  const dishHint =
+    current.key === 'dish' ? dishHintByPlace[choices.place?.id ?? ''] : ''
+
   function pick(option: Option) {
-    setChoices((prev) => ({ ...prev, [current.key]: option }))
+    setChoices((prev) => {
+      const nextChoices = { ...prev, [current.key]: option }
+      // если поменяли место и выбранное ранее блюдо там недоступно — сбрасываем его
+      if (current.key === 'place' && prev.dish) {
+        if (!allowedDishIds(option.id).includes(prev.dish.id)) {
+          delete nextChoices.dish
+        }
+      }
+      return nextChoices
+    })
   }
 
   function next() {
@@ -127,9 +164,14 @@ function App() {
   }
 
   function dodgeNo() {
+    // на тач-экранах прыжок поменьше, чтобы кнопка не улетала за край;
+    // на десктопе с мышью — обычный, живой
+    const isTouch = window.matchMedia('(pointer: coarse)').matches
+    const rangeX = isTouch ? 110 : 260
+    const rangeY = isTouch ? 80 : 150
     setNoOffset({
-      x: (Math.random() - 0.5) * 240,
-      y: (Math.random() - 0.5) * 140,
+      x: (Math.random() - 0.5) * rangeX,
+      y: (Math.random() - 0.5) * rangeY,
     })
   }
 
@@ -214,6 +256,8 @@ function App() {
 
         <h1>{current.title}</h1>
 
+        {dishHint && <p className="dish-hint">{dishHint}</p>}
+
         {step === 0 && (
           <input
             className="name-input"
@@ -226,7 +270,7 @@ function App() {
         )}
 
         <div className="options">
-          {current.options.map((option) => (
+          {currentOptions.map((option) => (
             <button
               key={option.id}
               className={`option ${selected?.id === option.id ? 'selected' : ''}`}
@@ -240,13 +284,16 @@ function App() {
         </div>
 
         {isLast && (
-          <input
-            className="date-input"
-            type="date"
-            min={todayISO}
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
+          <label className="date-field">
+            <span className="field-label">📅 Выберите дату свидания</span>
+            <input
+              className="date-input"
+              type="date"
+              min={todayISO}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </label>
         )}
 
         {isLast && (
