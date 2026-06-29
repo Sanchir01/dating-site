@@ -1,0 +1,383 @@
+.screen {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 4vw, 24px);
+  box-sizing: border-box;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(255, 183, 209, 0.45), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(255, 209, 102, 0.3), transparent 45%);
+}
+
+/* floating hearts background */
+.screen::before,
+.screen::after {
+  content: '💕  🌸  💗  🌷  💞  🍓  💕  🌸  💗';
+  position: absolute;
+  inset: 0;
+  font-size: 28px;
+  letter-spacing: 60px;
+  line-height: 120px;
+  opacity: 0.12;
+  pointer-events: none;
+  white-space: pre-wrap;
+  transform: rotate(-12deg) scale(1.4);
+}
+.screen::after {
+  opacity: 0.08;
+  transform: rotate(8deg) scale(1.6) translateY(60px);
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 640px;
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: clamp(20px, 5vw, 32px);
+  padding: clamp(20px, 5vw, 40px);
+  box-shadow: var(--shadow);
+  box-sizing: border-box;
+}
+
+.card h1 {
+  font-size: clamp(22px, 6vw, 32px);
+  margin: 0 0 clamp(18px, 4vw, 28px);
+  text-align: center;
+}
+
+/* progress dots */
+.progress {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.dot {
+  width: 36px;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+.dot.active {
+  background: var(--accent);
+}
+.dot.done {
+  background: var(--accent-border);
+}
+
+/* name input */
+.name-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: clamp(14px, 3vw, 20px);
+  padding: 14px 18px;
+  font: inherit;
+  color: var(--text-h);
+  background: var(--accent-bg);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.name-input::placeholder {
+  color: var(--text);
+  opacity: 0.7;
+}
+.name-input:focus {
+  border-color: var(--accent);
+}
+
+.invite-from {
+  margin: -8px 0 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* date picker */
+.date-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: clamp(14px, 3vw, 18px);
+  padding: 14px 18px;
+  font: inherit;
+  color: var(--text-h);
+  background: var(--accent-bg);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.date-input:focus {
+  border-color: var(--accent);
+}
+.date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: hue-rotate(300deg) saturate(2);
+}
+
+/* wishes textarea */
+.wishes-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: clamp(14px, 3vw, 18px);
+  padding: 14px 18px;
+  font: inherit;
+  color: var(--text-h);
+  background: var(--accent-bg);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  outline: none;
+  resize: vertical;
+  min-height: 64px;
+  transition: border-color 0.2s;
+}
+.wishes-input::placeholder {
+  color: var(--text);
+  opacity: 0.7;
+}
+.wishes-input:focus {
+  border-color: var(--accent);
+}
+
+.wishes-note {
+  margin: -8px 0 16px;
+  padding: 12px 16px;
+  font-size: 15px;
+  text-align: left;
+  color: var(--text-h);
+  background: var(--accent-bg);
+  border-radius: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* option grid — auto-collapses to one column on narrow screens */
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(10px, 2.5vw, 14px);
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: clamp(14px, 3.5vw, 18px);
+  border: 2px solid var(--border);
+  border-radius: 22px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    transform 0.15s ease;
+}
+.option:hover {
+  border-color: var(--accent-border);
+  transform: translateY(-3px) rotate(-1deg);
+}
+.option.selected {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  box-shadow: 0 0 0 4px var(--accent-bg);
+}
+.option .emoji {
+  font-size: 32px;
+}
+.option .label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+.option .desc {
+  font-size: 14px;
+}
+
+/* actions */
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: clamp(20px, 4vw, 28px);
+}
+.actions .primary {
+  flex: 1;
+  max-width: 240px;
+}
+
+button.primary,
+button.ghost {
+  font: inherit;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 99px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition:
+    opacity 0.2s,
+    transform 0.15s,
+    background 0.2s;
+}
+button.primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 8px 18px -6px var(--accent-border);
+}
+button.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+button.primary:hover {
+  opacity: 0.9;
+}
+button.primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+button.ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-h);
+}
+button.ghost:hover {
+  border-color: var(--accent-border);
+}
+
+/* intro screen */
+.intro {
+  text-align: center;
+}
+.intro-sub {
+  margin: 12px 0 28px;
+  font-size: 17px;
+}
+.intro-actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+}
+.intro-actions .primary {
+  font-size: 18px;
+  padding: 14px 32px;
+}
+.no-btn {
+  transition: transform 0.2s ease;
+}
+
+/* result screen */
+.result {
+  text-align: center;
+}
+.confetti {
+  font-size: 56px;
+  display: inline-block;
+  animation:
+    pop 0.5s ease-out,
+    wiggle 2s ease-in-out 0.5s infinite;
+}
+@keyframes pop {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-8deg) scale(1);
+  }
+  50% {
+    transform: rotate(8deg) scale(1.1);
+  }
+}
+.summary {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.summary li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 20px;
+  color: var(--text-h);
+}
+.summary li span {
+  font-size: 28px;
+}
+.result .primary {
+  width: 100%;
+}
+.tg-status {
+  margin: 0 0 16px;
+  font-size: 15px;
+  min-height: 22px;
+  font-weight: 600;
+}
+.tg-status.sent {
+  color: #2e9e6b;
+}
+.tg-status.error {
+  color: #e0556b;
+}
+.result .ghost {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+/* phones */
+@media (max-width: 420px) {
+  .actions {
+    flex-direction: column-reverse;
+  }
+  .actions .primary,
+  .actions .ghost {
+    width: 100%;
+    max-width: none;
+  }
+  .screen::before,
+  .screen::after {
+    font-size: 20px;
+    letter-spacing: 36px;
+    line-height: 90px;
+  }
+  .summary li {
+    font-size: 17px;
+  }
+  .summary li span {
+    font-size: 24px;
+  }
+}
+
+/* short / landscape screens — don't clip the card vertically */
+@media (max-height: 560px) {
+  .screen {
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option,
+  button.primary,
+  .confetti {
+    transition: none;
+    animation: none;
+  }
+}
