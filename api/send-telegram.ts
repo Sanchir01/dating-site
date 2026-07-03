@@ -2,6 +2,10 @@
 // server env vars — it is never shipped to the browser.
 import { sendTelegram, type DatePayload } from '../server/sendTelegram.js'
 
+// Web-standard (Request → Response) handler — requires the Edge runtime on Vercel.
+// On the default Node runtime the returned Response is ignored and the request hangs.
+export const config = { runtime: 'edge' }
+
 export default async function handler(req: Request): Promise<Response> {
   if (req.method !== 'POST') {
     return new Response('Method Not Allowed', { status: 405 })
