@@ -202,6 +202,39 @@ function App() {
   }
 
   if (done) {
+    // пока не пришёл ответ от Telegram — показываем отправку
+    if (sendState === 'sending' || sendState === 'idle') {
+      return (
+        <main className="screen">
+          <div className="card result">
+            <div className="confetti">✈️</div>
+            <h1>Отправляем приглашение…</h1>
+            <p className="tg-status sending">Секундочку 💌</p>
+          </div>
+        </main>
+      )
+    }
+
+    // отправка не удалась — даём попробовать ещё раз
+    if (sendState === 'error') {
+      return (
+        <main className="screen">
+          <div className="card result">
+            <div className="confetti">😔</div>
+            <h1>Не получилось отправить</h1>
+            <p className="tg-status error">⚠️ {sendError}</p>
+            <button className="primary" onClick={() => void submit()}>
+              Попробовать ещё раз
+            </button>
+            <button className="ghost" onClick={reset}>
+              Начать заново
+            </button>
+          </div>
+        </main>
+      )
+    }
+
+    // sendState === 'sent' — свидание точно назначено
     return (
       <main className="screen">
         <div className="card result">
@@ -222,17 +255,7 @@ function App() {
 
           {wishes.trim() && <p className="wishes-note">📝 {wishes.trim()}</p>}
 
-          <p className={`tg-status ${sendState}`}>
-            {sendState === 'sending' && '✈️ Отправляем в Telegram…'}
-            {sendState === 'sent' && '✅ Отправлено в Telegram'}
-            {sendState === 'error' && `⚠️ ${sendError}`}
-          </p>
-
-          {sendState === 'error' && (
-            <button className="ghost" onClick={() => void submit()}>
-              Попробовать ещё раз
-            </button>
-          )}
+          <p className="tg-status sent">✅ Приглашение доставлено</p>
 
           <button className="primary" onClick={reset}>
             Назначить ещё одно
