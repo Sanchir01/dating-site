@@ -1,6 +1,6 @@
 // Production serverless endpoint (Vercel / similar). Reads the bot token from
 // server env vars — it is never shipped to the browser.
-import { sendTelegram, type DatePayload } from '../server/sendTelegram.ts'
+import { sendTelegram, type DatePayload } from '../server/sendTelegram.js'
 
 export default async function handler(req: Request): Promise<Response> {
   if (req.method !== 'POST') {

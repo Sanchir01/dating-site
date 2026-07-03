@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
-import { sendTelegram, type DatePayload } from './server/sendTelegram.ts'
+import { sendTelegram, type DatePayload } from './server/sendTelegram.js'
 
 // Dev-only middleware so POST /api/send-telegram works under `npm run dev`.
 // In production this same logic lives in the serverless function api/send-telegram.ts
