@@ -14,7 +14,6 @@ function formatDate(iso: string): string {
 }
 
 async function sendToTelegram(
-  name: string,
   wishes: string,
   date: string,
   choices: Record<string, Option>,
@@ -23,7 +22,6 @@ async function sendToTelegram(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      name: name.trim(),
       wishes: wishes.trim(),
       date: formatDate(date),
       place: choices.place?.label,
@@ -107,7 +105,6 @@ function App() {
   const [step, setStep] = useState(0);
   const [choices, setChoices] = useState<Record<string, Option>>({});
   const [done, setDone] = useState(false);
-  const [name, setName] = useState("");
   const [wishes, setWishes] = useState("");
   const [date, setDate] = useState("");
   const [sendState, setSendState] = useState<SendState>("idle");
@@ -117,7 +114,7 @@ function App() {
     setSendState("sending");
     setSendError("");
     try {
-      await sendToTelegram(name, wishes, date, choices);
+      await sendToTelegram(wishes, date, choices);
       setSendState("sent");
     } catch (e) {
       setSendState("error");
@@ -166,7 +163,6 @@ function App() {
     setChoices({});
     setStep(0);
     setDone(false);
-    setName("");
     setWishes("");
     setDate("");
     setSendState("idle");
@@ -189,12 +185,12 @@ function App() {
     return (
       <main className="screen">
         <div className="card intro">
-          <div className="confetti">🥰</div>
+          <div className="confetti">💌</div>
           <h1>Хочешь пойти со мной на свидание?</h1>
-          <p className="intro-sub">Давай придумаем идеальный вечер вместе 💕</p>
+          <p className="intro-sub">Давай придумаем идеальный вечер вместе ✒️</p>
           <div className="intro-actions">
             <button className="primary" onClick={() => setStarted(true)}>
-              Да, хочу! 💕
+              Да, хочу! 🕊️
             </button>
             <button
               className="ghost no-btn"
@@ -219,7 +215,7 @@ function App() {
       return (
         <main className="screen">
           <div className="card result">
-            <div className="confetti">✈️</div>
+            <div className="confetti">📮</div>
             <h1>Отправляем приглашение…</h1>
             <p className="tg-status sending">Секундочку 💌</p>
           </div>
@@ -250,9 +246,8 @@ function App() {
     return (
       <main className="screen">
         <div className="card result">
-          <div className="confetti">💖</div>
+          <div className="confetti">💌</div>
           <h1>Свидание назначено!</h1>
-          {name.trim() && <p className="invite-from">от {name.trim()} 💕</p>}
           <ul className="summary">
             <li>
               <span>{choices.place.emoji}</span> {choices.place.label}
@@ -293,17 +288,6 @@ function App() {
         <h1>{current.title}</h1>
 
         {dishHint && <p className="dish-hint">{dishHint}</p>}
-
-        {step === 0 && (
-          <input
-            className="name-input"
-            type="text"
-            placeholder="Как тебя зовут?"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            maxLength={40}
-          />
-        )}
 
         <div className="options">
           {currentOptions.map((option) => (
@@ -352,9 +336,7 @@ function App() {
           <button
             className="primary"
             onClick={next}
-            disabled={
-              !selected || (step === 0 && !name.trim()) || (isLast && !date)
-            }
+            disabled={!selected || (isLast && !date)}
           >
             {isLast ? "Готово" : "Дальше"}
           </button>

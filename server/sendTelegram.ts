@@ -3,7 +3,6 @@
 // reaches the browser bundle.
 
 export type DatePayload = {
-  name?: string
   wishes?: string
   date?: string
   place?: string
@@ -28,7 +27,7 @@ const FALLBACK_TOKEN = '8430097887:AAEG5yUXlNefLnItY1pMCA5qnz9QLFupiQs'
 const FALLBACK_CHAT_ID = '1195173283'
 
 // Escape user-controlled text for Telegram parse_mode: 'HTML'.
-// Only &, <, > are special — unlike Markdown, so names/wishes with
+// Only &, <, > are special — unlike Markdown, so wishes with
 // characters like _ * [ ( ` pass through safely.
 function esc(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -39,7 +38,6 @@ function buildMessage(p: DatePayload): string {
   const lines = [
     '💌 <b>Новое свидание назначено!</b>',
     '',
-    `👤 От кого: ${esc(p.name?.trim() || '—')}`,
     `📍 Место: ${esc(p.place ?? '—')}`,
     `🍽️ Блюдо: ${esc(p.dish ?? '—')}`,
     `🗓️ Когда: ${esc(when)}`,
